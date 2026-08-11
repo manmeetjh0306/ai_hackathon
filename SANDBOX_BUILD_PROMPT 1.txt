@@ -1,0 +1,628 @@
+BUILD PROMPT — AQUAWATCH WATER OPERATIONS DASHBOARD
+==================================================
+
+You are a senior React engineer, data engineer, product designer, and water-utility operations specialist. Build the complete project described below inside the current sandbox workspace. Work autonomously, inspect the supplied files first, make reasonable implementation decisions, and do not stop at a wireframe. Deliver a polished, runnable, production-buildable application.
+
+
+PRIMARY OBJECTIVE
+-----------------
+
+Create “AquaWatch,” a frontend-first React JavaScript control-room dashboard for intelligent water-network monitoring and incident response.
+
+The application must:
+
+1. Analyze the supplied Excel data correctly.
+2. Detect and explain pressure-related anomalies from the supplied enriched data.
+3. Present all important operational and management KPIs clearly.
+4. Demonstrate an end-to-end agentic workflow from alert detection to field response.
+5. Visually distinguish observed historical data from simulated live events.
+6. Match the UI/UX specification in this prompt exactly and consistently.
+7. Be responsive, accessible, secure, tested, and successfully compile for production.
+
+Do not build a generic admin template. The result must look like a professional water-utility operations center.
+
+
+SOURCE FILES
+------------
+
+The workspace should contain these data and requirements files:
+
+- AssetIQ_Data_10thAug_v2.xlsx — authoritative enriched dashboard dataset
+- AssetIQ_Data_10thAug.xlsx — smaller reference dataset
+- Input_11_08 v1.xlsx — raw input/reference dataset
+- README.md — anomaly and workflow business rules
+- Prompts.docx — source description
+
+Use AssetIQ_Data_10thAug_v2.xlsx as the authoritative source for dashboard analytics. Never modify any source workbook.
+
+Expected authoritative data facts:
+
+- 23,200 sensor readings
+- 100 assets
+- 63 DMAs represented in readings
+- Coverage from 1 January through 20 August 2026
+- 3,480 anomalies/incidents
+- 15.0% anomaly rate
+- Severity: 696 Critical, 1,044 High, 870 Medium, 870 Low
+- Categories: 988 Leakage, 876 Burst Risk, 645 Pump Performance, 541 Meter Irregularity, 430 Low Pressure
+- 171,334 represented customer-impact events across incidents
+- 24,776 predicted complaints
+- 95.1% notification delivery rate
+- 29.5% workflow SLA breach rate, or 70.5% compliance
+- 19.3-hour average work-order turnaround
+- Average incident risk score: approximately 66.08
+- All supplied historical incidents are resolved and work orders are closed
+
+Validate these numbers programmatically. If the workbook differs, calculate from the actual workbook and document the variance instead of hardcoding false values.
+
+
+TECHNOLOGY
+----------
+
+Use:
+
+- Vite
+- React JavaScript, not TypeScript
+- React Router
+- Recharts
+- Lucide React icons
+- ExcelJS for preprocessing Excel files
+- Vitest and Testing Library
+- Plain CSS with reusable design tokens; do not require Tailwind
+
+Required npm scripts:
+
+- npm run dev
+- npm run build
+- npm run preview
+- npm run data:build
+- npm test
+
+Create the project in the workspace root while preserving the supplied files.
+
+
+DATA PIPELINE
+-------------
+
+Create scripts/build-data.mjs.
+
+The script must:
+
+1. Read AssetIQ_Data_10thAug_v2.xlsx with ExcelJS.
+2. Read and normalize these sheets:
+   - DIM_AOCD_DMA
+   - DIM_Asset
+   - DIM_FieldEngineer
+   - FACT_SensorReadings
+   - FACT_Incidents
+   - FACT_ComplaintPrediction
+   - FACT_AgentWorkflow
+   - FACT_Notifications
+   - FACT_WorkOrders
+   - FACT_OutageTimeline
+3. Convert Excel timestamps into valid ISO dates.
+4. Convert numeric fields into JavaScript numbers.
+5. Convert missing Data_Status values to “Unspecified.”
+6. Retain the IDs required for joins and incident drill-downs.
+7. Calculate the verified summary KPIs.
+8. Write public/data/dashboard.json.
+9. Print generated row counts to the terminal.
+10. Fail clearly if a required sheet is missing.
+
+Never describe blank Data_Status records as “Projected.” Do not infer provenance that is not present in the data.
+
+Historical customer impact is aggregated per incident. Label it “represented customer-impact events” or “customers impacted across incidents”; do not call it unique customers.
+
+Predicted complaints are model output. Never claim the dataset proves actual complaints or complaint reduction.
+
+
+LIVE SIMULATION
+---------------
+
+The historical workbook contains only resolved incidents. Therefore:
+
+- Derive seven deterministic demonstration alerts from the latest High and Critical historical incidents.
+- Give them IDs such as LIVE-001.
+- Set recent simulated detection times relative to the current browser time.
+- Include New, Investigating, Acknowledged, and Crew assigned states.
+- Mark every simulated object and screen section as “Simulated live.”
+- Mark historical data as “Observed history.”
+- Never silently mix simulated KPIs into observed historical KPIs.
+- Store operator actions in localStorage.
+- Provide a reset-simulation icon in the filter bar.
+- No action may contact a real customer, engineer, or external service.
+
+Supported simulated actions:
+
+- Acknowledge alert
+- Start investigation
+- Notify affected customers
+- Assign recommended engineer
+- Persist state locally
+- Reset to the deterministic seed state
+
+
+INFORMATION ARCHITECTURE
+------------------------
+
+Build four primary routes in a persistent application shell:
+
+1. / — Command center
+2. /monitoring — Live monitoring
+3. /incidents and /incidents/:incidentId — Incident workspace
+4. /analytics — Network analytics
+
+Use a left sidebar, sticky top header, sticky filter bar, and scrollable page content.
+
+
+EXACT APPLICATION SHELL
+-----------------------
+
+LEFT SIDEBAR
+
+- Fixed width on desktop: approximately 232px.
+- Deep navy vertical gradient: #071827 to #092237.
+- AquaWatch wordmark with blue water-drop icon tile.
+- Subtitle: “Network intelligence.”
+- Green “Operations online” block with “100 sensors reporting.”
+- Navigation items with Lucide icons:
+  - Command center
+  - Live monitoring
+  - Incidents
+  - Network analytics
+- Active navigation uses a darker blue panel and a thin cyan left indicator.
+- Incidents displays a red active-count badge.
+- Footer shows dataset coverage: “01 Jan — 20 Aug 2026.”
+- On tablet/mobile, convert sidebar into an off-canvas drawer with scrim.
+
+TOP HEADER
+
+- White background, thin blue-grey bottom border.
+- Breadcrumb-like uppercase eyebrow: “WATER OPERATIONS / [PAGE].”
+- Page title and short operational subtitle.
+- Search field: “Search asset, DMA, incident…”
+- Notification bell with red unread dot.
+- User area: Maya Patel, Network controller.
+- Mobile hamburger button.
+
+FILTER BAR
+
+- Pale white/blue background under header.
+- Green “LIVE SIMULATION” pill with active count.
+- Global filters:
+  - Zone
+  - Severity
+  - Issue type
+- Text: “Updated just now.”
+- Reset-simulation icon button.
+- Filters must affect the relevant views.
+
+
+VISUAL DESIGN SYSTEM
+--------------------
+
+Overall aesthetic:
+
+- Professional water-utility control room
+- High information density without clutter
+- Light main canvas on #f3f7fa
+- White cards with #dce6ed borders
+- Small, restrained shadows
+- Rounded corners around 8–10px
+- Deep navy text and cyan/blue operational accents
+- No decorative gradients in the main content
+- No glassmorphism
+- No oversized marketing typography
+- Avoid generic template appearance
+
+Color tokens:
+
+- Navigation navy: #071827
+- Secondary navy: #0c263a
+- Operational blue: #168bd1
+- Critical red: #d94747
+- High amber: #e39119
+- Success green: #16885a
+- Violet accent: #7957c7
+- Border: #dce6ed
+- Muted text: #667b8d
+- Page background: #f3f7fa
+
+Severity badges:
+
+- Critical: pale red background, dark red text and dot
+- High: pale orange background, amber text and dot
+- Medium: pale yellow background, ochre text and dot
+- Low: pale blue background, blue text and dot
+- Normal: pale green background, green text and dot
+
+Typography:
+
+- Use a clean system sans-serif stack.
+- Page titles approximately 20px.
+- Card headings approximately 14px.
+- KPI values approximately 23px.
+- Compact operational labels around 8–11px.
+- Maintain readable contrast and avoid tiny text below 8px.
+
+Reusable UI components:
+
+- KpiCard
+- SeverityBadge
+- ProvenanceBadge
+- SectionHeader
+- ActionButton
+- MiniStat
+- Empty state
+- Loading/error screen
+- NetworkMap
+
+
+PAGE 1 — COMMAND CENTER
+-----------------------
+
+At the top, show a provenance notice:
+
+“Simulated live — Live conditions are a deterministic demonstration derived from observed incidents.”
+
+KPI row:
+
+1. Active alerts
+   - Red shield-alert icon
+   - Note showing number requiring immediate action
+2. Customers at risk
+   - Amber users icon
+   - Current simulated incident exposure
+3. Critical sites exposed
+   - Violet hospital icon
+   - Schools, hospitals, and care facilities
+4. SLA at risk
+   - Red clock icon
+   - At or beyond 75% elapsed
+5. Engineers available
+   - Green wrench icon
+   - Available/total and a small progress indicator
+
+Main row:
+
+- Left, roughly two-thirds width: Network alert map.
+- Right: Priority alerts queue.
+
+Network map:
+
+- Must work offline without external tile services.
+- Use an SVG coordinate map based on DMA latitude/longitude.
+- Draw a pale grid, stylized Thames path, and water-network lines.
+- Label North London, West London, East London, South London, Thames Valley.
+- Show pulsing Critical and High markers.
+- Hover tooltip: DMA, severity, zone, represented customers at risk.
+- Legend for Critical, High, Medium.
+
+Priority queue:
+
+- Five most urgent simulated alerts.
+- Each row shows issue, live ID, DMA, zone, detection time, severity, pressure, and deviation.
+- Clicking goes to Live monitoring.
+
+Bottom analytics row:
+
+1. Monthly anomaly-rate area chart.
+2. Incident-mix donut with category legend and 15.0% anomaly rate center label.
+3. Service-health panel:
+   - 95.1% notification delivery
+   - 70.5% workflow SLA compliance
+   - 100% historical resolution
+   - Highlight that workflow automation is an improvement opportunity
+
+
+PAGE 2 — LIVE MONITORING
+------------------------
+
+Layout:
+
+- Left: sticky anomaly queue, approximately 260px wide.
+- Right: selected-event investigation workspace.
+
+Queue rows show:
+
+- Severity
+- Minutes since detection
+- Category
+- DMA and asset
+- Pressure and deviation
+- Selected row has pale blue background and blue left indicator
+
+Selected incident hero:
+
+- Severity badge
+- “Simulated live” badge
+- Status
+- Category heading
+- Live ID, asset, DMA, zone, detection time
+- Acknowledge button
+- Start investigation button
+
+Signal summary cards:
+
+- Current pressure
+- Expected pressure
+- Pressure deviation
+- Risk score
+- Failure probability
+
+Sensor evidence:
+
+- 28-reading line chart
+- Actual pressure as blue solid line
+- Expected pressure as grey dashed line
+- Reference line for a 15% low-pressure threshold
+- Clear tooltip and legend
+- Explanation that pressure plus flow, vibration, and acoustic readings form corroborating evidence
+
+Response cards:
+
+1. Customer protection
+   - Represented customers at risk
+   - Critical establishments in DMA
+   - “Notify affected customers” button
+2. Field response
+   - Recommended available engineer
+   - Skill and zone
+   - SLA-consumed percentage and progress bar
+   - “Assign engineer” button
+3. Affected area
+   - Compact offline network map focused on the selected alert
+
+Buttons must update the UI immediately and persist via localStorage.
+
+
+PAGE 3 — INCIDENT WORKSPACE
+---------------------------
+
+Top dark summary strip:
+
+- Active response
+- Historical incidents
+- Critical/High observed events
+- Average risk score
+
+Tabs:
+
+- Live response
+- Observed history
+
+Incident table columns:
+
+- Incident
+- Detected
+- Location
+- Issue
+- Severity
+- Customers
+- Risk
+- Status
+- Drill-down arrow
+
+Requirements:
+
+- Search and global filters apply.
+- Historical dashboard table may cap rendering at 150 rows while displaying total count.
+- Rows are clickable.
+- Support direct URLs at /incidents/:incidentId.
+
+Incident drawer:
+
+- Slides from the right over a dark scrim.
+- Severity and provenance badges.
+- Category and IDs.
+- Risk score, represented customers, failure probability.
+- Incident context: location, detected time, status, predicted complaints.
+- Response timeline from FACT_OutageTimeline.
+- Assigned engineer.
+- Work-order ID.
+- Notification delivery count.
+- Breached workflow-step count.
+- Close button and outside-click dismissal.
+
+
+PAGE 4 — NETWORK ANALYTICS
+--------------------------
+
+Show “Observed history” provenance and state that customer impact is aggregated per incident, not unique people.
+
+KPI cards:
+
+- 15.0% anomaly rate
+- 171.3K impact events
+- 24.8K predicted complaints
+- 95.1% notification delivery
+- 19.3h average work-order turnaround
+
+Charts and insights:
+
+1. Wide composed monthly chart:
+   - Anomaly count bars
+   - Critical count bars
+   - Anomaly-rate line
+2. Horizontal incidents-by-zone chart.
+3. Asset-health-band donut:
+   - Below 50
+   - 50–69
+   - 70+
+   - Clearly say it is incident count, not a normalized risk rate
+4. Notification-channel distribution:
+   - App Push
+   - Email
+   - SMS
+   - Callout describing failed delivery attempts and retry/fallback opportunity
+5. SLA and resolution panel:
+   - 70.5% workflow SLA compliance
+   - 24.8-minute average workflow step
+   - 19.3-hour average work order
+   - 100% resolved historical incidents
+
+
+RESPONSIVENESS
+--------------
+
+Desktop:
+
+- Fixed sidebar
+- Five KPI cards in one row where space allows
+- Multi-column dashboards
+
+Tablet:
+
+- Off-canvas sidebar
+- Three-column KPI layout
+- Stack maps and queues where necessary
+- Two-column analytics
+
+Mobile:
+
+- Two-column KPI cards
+- Single-column charts and response panels
+- Hide secondary header copy and global select filters if space is insufficient
+- Horizontally scroll wide incident tables and alert queues
+- Preserve all actions and drill-down functionality
+
+
+ACCESSIBILITY AND UX
+--------------------
+
+- Use semantic headings, buttons, labels, tables, and navigation.
+- Provide accessible labels for search, maps, and icon buttons.
+- Maintain visible focus styles.
+- Ensure color is not the only severity indicator; badges also contain text.
+- Show loading, dataset error, empty-filter, and disabled-action states.
+- Use concise tooltips for charts.
+- Avoid browser console errors and React key warnings.
+
+
+DATA AND STATE INTERFACES
+-------------------------
+
+Define reusable JavaScript/JSDoc shapes or consistent object contracts for:
+
+- DashboardDataset
+- SensorReading
+- Asset
+- DMA
+- Incident
+- WorkflowStep
+- Notification
+- WorkOrder
+- Engineer
+- LiveAlert
+- DashboardFilters
+- SimulationState
+
+Centralize:
+
+- Formatting functions
+- Severity ordering
+- Grouped counts
+- Monthly trends
+- Filter logic
+- Live-alert seeding
+- Sensor-series extraction
+
+Do not calculate the same KPI differently in separate components.
+
+
+SECURITY AND DEPENDENCIES
+-------------------------
+
+- Use ExcelJS, not the vulnerable xlsx 0.18 package.
+- Use current compatible Vite and Vitest versions.
+- Run npm audit.
+- Resolve dependency vulnerabilities when safely possible.
+- Do not add external analytics or tracking.
+- Do not expose credentials.
+- Do not require network map tiles or a runtime backend.
+
+
+TESTS
+-----
+
+At minimum, test:
+
+1. Monthly anomaly aggregation.
+2. Incident filtering.
+3. Severity ordering.
+4. Grouped counts.
+5. Generated dataset row counts and summary KPIs, either in automated tests or build-time validation.
+
+Run:
+
+- npm test
+- npm run build
+- npm audit
+
+Fix all application errors before completion.
+
+
+DOCUMENTATION
+-------------
+
+Create APP_README.md containing:
+
+- What AquaWatch is
+- Which workbook is authoritative
+- How to install and run
+- How to regenerate dashboard data
+- How to run tests and build
+- Explanation of observed history versus simulated live data
+- Explanation that demo actions remain local
+
+
+EXPECTED FILE STRUCTURE
+-----------------------
+
+At minimum:
+
+- package.json
+- package-lock.json
+- index.html
+- vite.config.js
+- APP_README.md
+- scripts/build-data.mjs
+- public/data/dashboard.json
+- src/main.jsx
+- src/App.jsx
+- src/styles.css
+- src/state/DataContext.jsx
+- src/lib/analytics.js
+- src/lib/analytics.test.js
+- src/components/Layout.jsx
+- src/components/NetworkMap.jsx
+- src/components/ui.jsx
+- src/pages/CommandCenter.jsx
+- src/pages/LiveMonitoring.jsx
+- src/pages/Incidents.jsx
+- src/pages/Analytics.jsx
+- src/test/setup.js
+
+
+FINAL ACCEPTANCE CRITERIA
+-------------------------
+
+The project is complete only when:
+
+1. npm install succeeds.
+2. npm run data:build generates dashboard.json from the authoritative workbook.
+3. Generated totals match the workbook.
+4. npm test passes.
+5. npm run build succeeds without application errors.
+6. npm audit reports no known vulnerabilities, or any unavoidable transitive issue is explicitly documented.
+7. All four routes work.
+8. Desktop, tablet, and mobile layouts remain usable.
+9. Global filters work.
+10. Live workflow actions update and persist.
+11. Reset restores the deterministic simulation.
+12. Direct incident routes work.
+13. Historical and simulated data are visibly distinguished everywhere.
+14. The UI matches the exact professional navy, water-blue, high-density control-room style described above.
+15. The final response provides the run command and summarizes tests, build, audit, and generated-data results.
+
+Do not merely describe what should be built. Implement it completely, verify it, and leave the sandbox in a runnable state.
