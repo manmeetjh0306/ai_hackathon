@@ -1,3 +1,43 @@
+==== PPT ====
+Using the attached EXL Hackathon PowerPoint template, create a visually compelling five-minute pitch deck for “AquaSentinel AI.”
+
+AquaSentinel AI is an agentic solution for UK water utilities that detects Leakage, Burst Risk and Low Pressure from network telemetry, explains the evidence, estimates customer and critical-site impact, creates an AOCD incident, assigns the SLA, selects the nearest qualified field engineer, generates a work order and prepares customer and field-team notifications—with human approval before execution.
+
+Follow the template sections:
+
+1. Problem & Customer Focus
+2. AI Solution & Innovation
+3. Competitive Differentiation
+4. Revenue & Business Growth
+
+Include verified UK water-industry statistics from Ofwat, the Environment Agency and Water UK covering leakage, burst pipes, network scale and AMP8 investment. Cite every source and do not invent statistics.
+
+Show this journey visually:
+
+Observe → Detect → Explain → Predict impact → Recommend → Human approval → Create incident → Dispatch engineer → Notify customers → Monitor resolution
+
+Highlight:
+
+- Explainable multi-signal anomaly detection
+- AI Situation Room and “What happens if we wait?” simulation
+- Detection, Impact, Incident, Dispatch and Communication agents
+- Integration with SCADA, GIS, CRM and work-management systems
+- Faster AOCD incident creation, triage, field assignment and communication
+- An 8–12 week pilot across selected AOCDs and DMAs
+
+Label all projected benefits as:
+
+“Illustrative pilot targets—subject to utility baseline validation.”
+
+Use minimal text, strong headlines, large numbers, agent workflows, UK network maps and AI reasoning visuals. Make the deck feel like an AI product pitch—not a reporting dashboard.
+
+End with:
+
+“AquaSentinel AI transforms fragmented network signals into explainable, coordinated action—helping water utilities respond before customer disruption escalates.”
+
+======= PPT =====
+
+
 This dataset represents an AI-enabled water-utility asset monitoring and incident-management system. It contains daily sensor readings for 100 assets from 1 January to 20 August 2026, including pressure, flow, vibration and acoustic measurements. The data identifies anomalous readings, classifies their type and severity, and links them to incidents, predicted customer complaints, agent workflows, customer notifications, engineer assignments, work orders and outage-restoration timelines.
 
 
